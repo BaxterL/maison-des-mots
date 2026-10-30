@@ -7,7 +7,7 @@
 一间开在浏览器里的法式纸雕文案室。输入一个主题，选一种语气，让文字落在信笺上；
 再把香水、玫瑰、旧钥匙与月亮，一枚一枚贴进页边。
 
-[在线参观](https://baxterl.github.io/maison-des-mots/) · [设计 Skill](SKILL.md) · [English](#english)
+[在线参观](https://baxterl.github.io/maison-des-mots/) · [设计 Skill](SKILL.md) · [Skill 仓库](https://github.com/BaxterL/maison-des-mots-skill) · [English](#english)
 
 </div>
 
@@ -83,6 +83,8 @@ npm run preview   # 预览构建结果
 `SKILL.md` 把整套美术方向和实现路径写成了可复用的 Skill：色板、字体、纸的物理感、
 组件配方、动效与可访问性清单，以及最容易踩坏的几个响应式断点。
 交给你的 AI 编码助手，就能从一句话开始，重新长出一间自己的纸雕文案室。
+
+也可以直接从 [maison-des-mots-skill](https://github.com/BaxterL/maison-des-mots-skill) 取用。
 
 ## 许可
 
