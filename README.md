@@ -75,6 +75,7 @@ npm run preview   # 预览构建结果
 - 拱廊版画：Francesco Guardi，《Architectural Capriccio: Vaulted Colonnade of a Palace》，
   [The Met](https://www.metmuseum.org/art/collection/search/338938)，公有领域。
 - 字体：Cormorant Garamond、Pinyon Script、Noto Serif SC、Special Elite，均来自 Google Fonts（SIL OFL）。
+  仓库里已做中文用字子集并本地托管（约 200KB），不依赖外部字体 CDN，国内访问也不会掉字体。
 - 界面与实现：React 19 + Vite + GSAP（`useGSAP` 入场/视差 + `Draggable` 贴纸拼贴）。
 
 ## 把这一页搬走
