@@ -30,11 +30,9 @@ export default function HeroCollage() {
         <div className="hero-paper-footer"><span>MAISON DES MOTS</span><span>PAGE 01</span></div>
       </div>
       <div className="hero-sticker hero-stamp parallax-layer"><StickerArt type="stamp" /></div>
-      <div className="hero-sticker hero-rose parallax-layer"><StickerArt type="rose" /></div>
       <div className="hero-camellia parallax-layer"><span className="camellia-thread" /><span className="camellia-ring" /><img src={camellia} width="274" height="273" alt="" /></div>
       <div className="hero-hanging parallax-layer" aria-hidden="true"><span className="hanging-thread" /><span className="hanging-ring" /><StickerArt type="bottle" /></div>
       <div className="hero-souvenir parallax-layer"><div className="souvenir-content"><span lang="fr">Souvenir</span><small>PAGE · 01</small></div></div>
-      <svg className="hero-star parallax-layer" viewBox="0 0 70 70" aria-hidden="true"><g fill="none" stroke="currentColor" strokeWidth=".8"><path d="M35 3c1 21 10 30 32 32-22 1-31 10-32 32-1-22-10-31-32-32C25 33 34 24 35 3Z" /><circle cx="35" cy="35" r="8" /><circle cx="35" cy="35" r="2" fill="currentColor" /></g></svg>
     </div>
   );
 }

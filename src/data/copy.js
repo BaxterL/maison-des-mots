@@ -36,6 +36,8 @@ export function createCopy(topic, tone, variation = 0) {
     title,
     body: `${middle}${closings[tone][(index + 1) % 3]}`,
     note: `${tones.find((item) => item.id === tone)?.french} · Édition ${String(variation + 1).padStart(2, '0')}`,
+    signature: 'avec tendresse,',
+    custom: false,
   };
 }
 
@@ -43,4 +45,6 @@ export const initialCopy = {
   title: '把日子放慢一点',
   body: '关于街角花店的春日午后，我想留下这样一行字：光落下来的地方，时间也愿意坐一会儿。那些没有被说出的喜欢，正藏在花影、纸页与午后的微风里。愿每一个平常的日子，都有一处值得珍藏的折角。',
   note: 'Tendre · Édition 01',
+  signature: 'avec tendresse,',
+  custom: false,
 };
