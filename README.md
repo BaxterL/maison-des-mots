@@ -35,7 +35,7 @@ Noto Serif SC 承担中文的呼吸，Special Elite 把档案编号、邮戳和�
 **纸的厚度**：没有用任何滤镜贴图。白边 + 细墨蓝描边 + 短距离柔阴影，再叠一层 rotate 与错位，
 纸就从平面里站起来了。信笺、吊牌、菱形的 Souvenir 卡、画布上的贴纸，用的都是同一套「模切」语言。
 
-**装饰**：山茶花吊牌来自 Trianon 的 CC0 素材，拱廊版画是 The Met 的公有领域馆藏；
+**装饰**：山茶花吊牌与拱廊版画给拼贴一点古典底子；
 其余六枚贴纸——香水瓶、蓝玫瑰、邮票、旧钥匙、缎带蝴蝶结、月亮挂坠——都是项目里的手绘线稿 SVG，
 统一收进墨蓝与银蓝两色，所以再多也不花。
 
@@ -69,14 +69,7 @@ npm run preview   # 预览构建结果
 
 构建部署到 GitHub Pages 时，`VITE_BASE_PATH` 会由 `.github/workflows/deploy.yml` 自动注入为 `/<repo>/`。
 
-## 素材与致谢
-
-- 纸样与山茶花素材：[Trianon](https://github.com/qimingjiu/Trianon)，作者声明为 CC0。
-- 拱廊版画：Francesco Guardi，《Architectural Capriccio: Vaulted Colonnade of a Palace》，
-  [The Met](https://www.metmuseum.org/art/collection/search/338938)，公有领域。
-- 字体：Cormorant Garamond、Pinyon Script、Noto Serif SC、Special Elite，均来自 Google Fonts（SIL OFL）。
-  仓库里已做中文用字子集并本地托管（约 200KB），不依赖外部字体 CDN，国内访问也不会掉字体。
-- 界面与实现：React 19 + Vite + GSAP（`useGSAP` 入场/视差 + `Draggable` 贴纸拼贴）。
+技术：React 19 + Vite + GSAP（`useGSAP` 入场/视差 + `Draggable` 贴纸拼贴）。字体已做中文子集并本地托管，不依赖外部字体 CDN。
 
 ## 把这一页搬走
 
@@ -88,7 +81,7 @@ npm run preview   # 预览构建结果
 
 ## 许可
 
-代码以 [MIT](LICENSE) 发布；图片素材遵循其原始授权（CC0 / 公有领域），请保留上方来源说明。
+代码以 [MIT](LICENSE) 发布。
 
 <a id="english"></a>
 

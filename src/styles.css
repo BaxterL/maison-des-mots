@@ -274,8 +274,6 @@ img { max-width: 100%; }
 .about-note h2 { margin: 18px 0; font-family: var(--chinese); font-size: clamp(33px, 4vw, 49px); font-weight: 400; line-height: 1.45; letter-spacing: .05em; }
 .about-note > p:not(.about-script) { max-width: 480px; margin: 0 auto; color: var(--ink-soft); font-family: var(--chinese); font-size: 13px; line-height: 2; letter-spacing: .06em; }
 .light-link { min-height: 44px; display: inline-flex; align-items: center; margin-top: 24px; border-bottom: 1px solid var(--line); font-family: var(--chinese); font-size: 12px; text-decoration: none; letter-spacing: .1em; }
-.asset-credit { margin-top: 26px; color: var(--ink-soft); font-family: var(--typewriter); font-size: 9px; letter-spacing: .05em; }
-.asset-credit a { text-underline-offset: 3px; }
 .footer { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 20px; padding: 27px 6.5% 33px; font-family: var(--typewriter); font-size: 9px; letter-spacing: .09em; text-transform: uppercase; }
 .footer > :last-child { text-align: end; }
 .footer-script { font-family: var(--serif); font-size: 20px; font-weight: 500; letter-spacing: .06em; }
