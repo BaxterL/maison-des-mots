@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.commandcode/
+command-code-session-*.html
+.DS_Store
+Thumbs.db
+*.local
