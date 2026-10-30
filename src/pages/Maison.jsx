@@ -8,11 +8,10 @@ const principles = [
   { no: '03', title: '慢慢写', text: '模板可以起稿，也可以自己写。自己写的字，会原样落在纸上，不加一句多余的话。' },
 ];
 
-export default function Maison({ active, onNavigate }) {
+export default function Maison({ enter, onNavigate }) {
   const rootRef = useRef(null);
 
   useGSAP(() => {
-    if (!active) return undefined;
     const media = gsap.matchMedia();
     media.add('(prefers-reduced-motion: no-preference)', () => {
       const timeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
@@ -24,9 +23,11 @@ export default function Maison({ active, onNavigate }) {
         .from('.maison-lede', { opacity: 0, y: 16, duration: 0.55 }, '<0.2')
         .from('.principle', { opacity: 0, y: 22, duration: 0.6, stagger: 0.1 }, '<0.2')
         .from('.maison-sign > *', { opacity: 0, y: 10, duration: 0.55, stagger: 0.1 }, '<0.2');
+      if (enter) timeline.play(0);
+      else timeline.pause(0);
     });
     return () => media.revert();
-  }, { dependencies: [active], scope: rootRef, revertOnUpdate: true });
+  }, { dependencies: [enter], scope: rootRef, revertOnUpdate: true });
 
   return (
     <section ref={rootRef} className="page-maison" aria-labelledby="maison-title">
@@ -54,6 +55,19 @@ export default function Maison({ active, onNavigate }) {
           <span className="maison-seal" aria-hidden="true">M</span>
           <span className="maison-note" lang="fr">Fait avec des mots et des riens précieux</span>
         </div>
+        <p className="maison-colophon">
+          <span className="maison-author">作者 <strong>凛冬初十</strong></span>
+          <a
+            className="maison-github"
+            href="https://github.com/BaxterL/maison-des-mots"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z" /></svg>
+            <span>github.com/BaxterL/maison-des-mots</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </p>
       </div>
     </section>
   );

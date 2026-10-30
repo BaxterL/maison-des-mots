@@ -4,9 +4,13 @@ import { useGSAP } from '@gsap/react';
 import { createCopy, examples, tones } from '../data/copy';
 import { StickerArt, stickerCatalog } from '../components/StickerArt';
 
+const Paperclip = () => (
+  <svg viewBox="0 0 28 64" aria-hidden="true"><path d="M20 9v37a8 8 0 0 1-16 0V15a5 5 0 0 1 10 0v34a2.6 2.6 0 0 1-5.2 0V17" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" /></svg>
+);
+
 const sampleArt = ['rose', 'bottle', 'moon'];
 
-export default function Inspiration({ active, onUse }) {
+export default function Inspiration({ enter, onUse }) {
   const rootRef = useRef(null);
   const samples = examples.map((example, index) => {
     const copy = createCopy(example.topic, example.tone, index);
@@ -15,7 +19,6 @@ export default function Inspiration({ active, onUse }) {
   });
 
   useGSAP(() => {
-    if (!active) return undefined;
     const media = gsap.matchMedia();
     media.add('(prefers-reduced-motion: no-preference)', () => {
       const timeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
@@ -25,9 +28,11 @@ export default function Inspiration({ active, onUse }) {
         .from('.inspiration-lede, .inspiration-note', { opacity: 0, y: 14, duration: 0.5, stagger: 0.08 }, '<0.2')
         .from('.sample', { opacity: 0, y: 34, rotation: 2, duration: 0.7, stagger: 0.11 }, '<0.25')
         .from('.collection-head, .collection-item', { opacity: 0, y: 16, duration: 0.5, stagger: 0.06 }, '<0.35');
+      if (enter) timeline.play(0);
+      else timeline.pause(0);
     });
     return () => media.revert();
-  }, { dependencies: [active], scope: rootRef, revertOnUpdate: true });
+  }, { dependencies: [enter], scope: rootRef, revertOnUpdate: true });
 
   return (
     <section ref={rootRef} className="page-inspiration" aria-labelledby="inspiration-title">
@@ -44,6 +49,7 @@ export default function Inspiration({ active, onUse }) {
         {samples.map(({ example, copy, tone, art }, index) => (
           <article className="sample" key={example.title}>
             <span className="sample-tape" aria-hidden="true" />
+            <span className="sample-clip" aria-hidden="true"><Paperclip /></span>
             <div className="sample-head">
               <span className="sample-edition" lang="fr">ÉDITION 0{index + 1}</span>
               <span className="sample-tone">{tone?.label}</span>
@@ -62,9 +68,12 @@ export default function Inspiration({ active, onUse }) {
       </div>
 
       <section className="collection" aria-labelledby="collection-title">
+        <span className="collection-clip" aria-hidden="true"><Paperclip /></span>
+        <span className="collection-tape" aria-hidden="true" />
+        <span className="collection-stamp" lang="fr">PLANCHE N° 02</span>
         <div className="collection-head">
           <p className="kicker" lang="fr">La petite collection</p>
-          <h3 id="collection-title">六枚手绘贴纸，<br /><em>等你贴上去。</em></h3>
+          <h3 id="collection-title">十枚手绘贴纸，<br /><em>等你贴上去。</em></h3>
           <p className="inspiration-note">全部是线稿 SVG，统一收进墨蓝与银蓝两色。</p>
         </div>
         <ul className="collection-grid">

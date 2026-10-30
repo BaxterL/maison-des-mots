@@ -6,8 +6,7 @@ import Inspiration from './pages/Inspiration';
 import Maison from './pages/Maison';
 import Studio from './components/Studio';
 import MenuRibbons from './components/MenuRibbons';
-import PageTurn from './components/PageTurn';
-import { PAGES, pageById, pageFromHash, pageIndex } from './data/pages';
+import { PAGES, pageById, pageFromHash } from './data/pages';
 
 function Corner({ position }) {
   return (
@@ -20,36 +19,28 @@ export default function App() {
   const mainRef = useRef(null);
   const studioRef = useRef(null);
   const pageRef = useRef(pageFromHash(window.location.hash));
-  const turnRef = useRef(null);
 
   const [page, setPage] = useState(pageRef.current);
   const [loaded, setLoaded] = useState(() => ({ [pageRef.current]: true }));
-  const [turn, setTurn] = useState(null);
-  const [settled, setSettled] = useState(true);
   const [pendingExample, setPendingExample] = useState(null);
+  // Every arrival replays the entrance: the page mounts in its start state,
+  // then the elements land one by one on the next frame.
+  const [entered, setEntered] = useState(true);
 
   useEffect(() => { pageRef.current = page; }, [page]);
-  useEffect(() => { turnRef.current = turn; }, [turn]);
 
   const navigate = useCallback((id, push = true) => {
-    if (!PAGES.some((item) => item.id === id) || turnRef.current || id === pageRef.current) return;
-    const from = pageRef.current;
-    const dir = pageIndex(id) > pageIndex(from) ? 1 : -1;
-    setLoaded((current) => current[id] ? current : { ...current, [id]: true });
-    setTurn({ from, to: id, dir, key: Date.now() });
-    turnRef.current = { from, to: id, dir };
-    setSettled(false);
-    setPage(id);
+    if (!PAGES.some((item) => item.id === id) || id === pageRef.current) return;
+    setEntered(false);
+    setLoaded((current) => (current[id] ? current : { ...current, [id]: true }));
     pageRef.current = id;
+    setPage(id);
     if (push) window.history.pushState({ page: id }, '', `#/${id}`);
     window.scrollTo({ top: 0, behavior: 'auto' });
-  }, []);
-
-  const finishTurn = useCallback(() => {
-    turnRef.current = null;
-    setTurn(null);
-    setSettled(true);
-    requestAnimationFrame(() => mainRef.current?.focus({ preventScroll: true }));
+    requestAnimationFrame(() => {
+      setEntered(true);
+      mainRef.current?.focus({ preventScroll: true });
+    });
   }, []);
 
   useEffect(() => {
@@ -68,16 +59,15 @@ export default function App() {
   }, [page]);
 
   useEffect(() => {
-    if (!pendingExample || !settled || page !== 'atelier') return;
+    if (!pendingExample || page !== 'atelier') return;
     const timer = window.setTimeout(() => {
       studioRef.current?.generateWith(pendingExample);
       setPendingExample(null);
     }, 160);
     return () => window.clearTimeout(timer);
-  }, [pendingExample, page, settled]);
+  }, [pendingExample, page]);
 
   useGSAP(() => {
-    if (!settled) return undefined;
     const media = gsap.matchMedia();
     media.add('(prefers-reduced-motion: no-preference)', () => {
       const timeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
@@ -87,14 +77,14 @@ export default function App() {
         .from('.menu-ribbons .menu-ribbon', { opacity: 0, x: 18, duration: 0.5, stagger: 0.05, clearProps: 'transform' }, '<0.1');
     });
     return () => media.revert();
-  }, { dependencies: [page, settled], scope: rootRef, revertOnUpdate: true });
+  }, { dependencies: [page], scope: rootRef, revertOnUpdate: true });
 
   const useExample = (example) => {
     setPendingExample(example);
     navigate('atelier');
   };
 
-  const activeFor = (id) => settled && page === id;
+  const activeFor = (id) => page === id;
 
   return (
     <div ref={rootRef} className="app">
@@ -124,22 +114,22 @@ export default function App() {
           <main id="main" ref={mainRef} tabIndex={-1} className="page-stage">
             {Object.keys(loaded).map((id) => (
               <div key={id} className={`page-view page-view--${id}${activeFor(id) ? ' is-active' : ''}`} hidden={page !== id}>
-                {id === 'couverture' && <Cover active={activeFor(id)} onNavigate={navigate} />}
+                {id === 'couverture' && <Cover active={activeFor(id)} enter={entered && page === id} onNavigate={navigate} />}
                 {id === 'atelier' && (
                   <Studio
                     ref={studioRef}
                     active={activeFor(id)}
+                    enter={entered && page === id}
                   />
                 )}
-                {id === 'inspiration' && <Inspiration active={activeFor(id)} onUse={useExample} />}
-                {id === 'maison' && <Maison active={activeFor(id)} onNavigate={navigate} />}
+                {id === 'inspiration' && <Inspiration active={activeFor(id)} enter={entered && page === id} onUse={useExample} />}
+                {id === 'maison' && <Maison active={activeFor(id)} enter={entered && page === id} onNavigate={navigate} />}
               </div>
             ))}
           </main>
           <footer className="footer"><span lang="fr">Fait avec des mots et des riens précieux</span><span className="footer-script">Maison des Mots</span><span>Write · Collect · Remember</span></footer>
         </div>
       </div>
-      <PageTurn turn={turn} onDone={finishTurn} />
     </div>
   );
 }

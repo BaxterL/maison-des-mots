@@ -4,6 +4,7 @@ import { useGSAP } from '@gsap/react';
 import { Draggable } from 'gsap/Draggable';
 import { createCopy, initialCopy, tones } from '../data/copy';
 import { StickerArt, stickerCatalog } from './StickerArt';
+import { exportPaperPng, downloadBlob } from '../utils/exportPaper';
 
 const firstStickers = [
   { id: 'rose-first', type: 'rose', x: 18, y: 42, rotation: -12 },
@@ -14,6 +15,8 @@ const paperFonts = [
   { id: 'kai', label: '文楷', name: 'LXGW WenKai' },
   { id: 'song', label: '宋体', name: 'Noto Serif SC' },
   { id: 'latin', label: '拉丁', name: 'Cormorant' },
+  { id: 'kuaile', label: '快乐', name: 'ZCOOL KuaiLe' },
+  { id: 'huangyou', label: '黄油', name: 'ZCOOL QingKe HuangYou' },
 ];
 
 const TOKEN_RE = /([A-Za-zÀ-ÖØ-öø-ÿ0-9]+(?:[’'\-][A-Za-zÀ-ÖØ-öø-ÿ0-9]+)*)|(\n)|(\s+)|([\s\S])/g;
@@ -48,6 +51,14 @@ function Brush() {
       <path d="M31 33 C27 38 23 44 19 50 C16 55 12 59 8 62 C13 59 18 55 23 51 C28 47 32 41 35 36 Z" fill="url(#brush-tip)" />
       <path d="M30 35 C27 40 24 45 21 50" stroke="rgba(255,253,248,.34)" strokeWidth=".9" fill="none" />
       <circle cx="8" cy="62" r="1.6" fill="#0E1426" opacity=".85" />
+    </svg>
+  );
+}
+
+function Paperclip({ className = '' }) {
+  return (
+    <svg className={`paperclip ${className}`} viewBox="0 0 28 64" aria-hidden="true">
+      <path d="M20 9v37a8 8 0 0 1-16 0V15a5 5 0 0 1 10 0v34a2.6 2.6 0 0 1-5.2 0V17" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
     </svg>
   );
 }
@@ -93,7 +104,7 @@ function Inkwell({ label, dipping, onCycle }) {
 }
 
 
-function GeneratedCopy({ copy, onTyped, active, skipRef, onWriting }) {
+function GeneratedCopy({ copy, onTyped, active, skipRef, onWriting, speed = 1 }) {
   const copyRef = useRef(null);
   const quillRef = useRef(null);
   const playedRef = useRef(null);
@@ -126,16 +137,16 @@ function GeneratedCopy({ copy, onTyped, active, skipRef, onWriting }) {
 
     onWriting?.(true);
 
-    const moveQuill = (element) => {
+    const moveQuill = (element, tilt = 0) => {
       if (!quill || !element) return;
       const currentBase = root.getBoundingClientRect();
       const rect = element.getBoundingClientRect();
       const x = rect.left - currentBase.left + rect.width - 6;
       const y = rect.top - currentBase.top + rect.height - 44;
-      gsap.to(quill, { x, y, duration: 0.16, ease: 'power2.out', overwrite: 'auto' });
+      gsap.to(quill, { x, y, rotation: tilt, scaleY: 1.04, duration: 0.16 / speed, ease: 'power2.out', overwrite: 'auto' });
     };
 
-    gsap.set(chars, { opacity: 0, filter: 'blur(1.4px)' });
+    gsap.set(chars, { opacity: 0, filter: 'blur(1.8px)', y: 1.6 });
     gsap.set(quill, { opacity: 0, x: 8, y: 30 });
     gsap.from(root.querySelector('.generated-title'), { opacity: 0, y: 10, filter: 'blur(3px)', duration: 0.65, ease: 'power3.out' });
     gsap.from(root.querySelector('.generated-note'), { opacity: 0, y: 6, duration: 0.45, ease: 'power3.out' });
@@ -153,7 +164,7 @@ function GeneratedCopy({ copy, onTyped, active, skipRef, onWriting }) {
     if (bucket.length) groups.push(bucket);
 
     const timeline = gsap.timeline({
-      delay: 0.22,
+      delay: 0.22 / speed,
       onComplete: () => {
         if (skipRef) skipRef.current = null;
         onWriting?.(false);
@@ -163,23 +174,24 @@ function GeneratedCopy({ copy, onTyped, active, skipRef, onWriting }) {
     });
     timeline.to(quill, { opacity: 1, duration: 0.2 }, 0);
 
-    const step = Math.min(0.17, 2.2 / Math.max(1, groups.length));
+    const step = Math.min(0.17, 2.2 / Math.max(1, groups.length)) / speed;
     let cursor = 0;
-    groups.forEach((group) => {
+    groups.forEach((group, groupIndex) => {
       const visible = group.filter((index) => !tokens[index].space && !tokens[index].newline);
       const last = visible[visible.length - 1];
-      if (last !== undefined) timeline.call(() => moveQuill(chars[last]), null, cursor);
+      if (last !== undefined) timeline.call(() => moveQuill(chars[last], groupIndex % 2 ? 5 : -4), null, cursor);
       group.forEach((index, order) => {
         timeline.to(chars[index], {
           opacity: 1,
           filter: 'blur(0px)',
-          duration: 0.12,
+          y: 0,
+          duration: 0.13 / speed,
           ease: 'power1.out',
-        }, cursor + Math.min(0.04, order * 0.02));
+        }, cursor + Math.min(0.04, order * 0.02) / speed);
       });
       cursor += step;
     });
-    timeline.from(root.querySelector('.generated-signature'), { opacity: 0, y: 6, duration: 0.45, ease: 'power3.out' }, '+=0.12');
+    timeline.from(root.querySelector('.generated-signature'), { opacity: 0, y: 6, duration: 0.45 / speed, ease: 'power3.out' }, '+=0.12');
 
     if (skipRef) skipRef.current = () => timeline.progress(1);
 
@@ -208,7 +220,7 @@ function GeneratedCopy({ copy, onTyped, active, skipRef, onWriting }) {
   );
 }
 
-const Studio = forwardRef(function Studio({ active }, ref) {
+const Studio = forwardRef(function Studio({ active, enter }, ref) {
   const rootRef = useRef(null);
   const boardRef = useRef(null);
   const paperRef = useRef(null);
@@ -234,6 +246,11 @@ const Studio = forwardRef(function Studio({ active }, ref) {
   const [copied, setCopied] = useState(false);
   const [paperFont, setPaperFont] = useState('kai');
   const [dipping, setDipping] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [bookOpen, setBookOpen] = useState(false);
+  const [pane, setPane] = useState('write');
+  const [speed, setSpeed] = useState(1);
+  const [noteOffset, setNoteOffset] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     if (!copied) return undefined;
@@ -247,7 +264,6 @@ const Studio = forwardRef(function Studio({ active }, ref) {
   const { contextSafe } = useGSAP(() => {}, { scope: rootRef });
 
   useGSAP(() => {
-    if (!active) return undefined;
     const media = gsap.matchMedia();
     media.add('(prefers-reduced-motion: no-preference)', () => {
       const timeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
@@ -259,11 +275,13 @@ const Studio = forwardRef(function Studio({ active }, ref) {
         .from('.preview-toolbar', { opacity: 0, y: 12, duration: 0.45 }, '<0.08')
         .from('.collage-board', { opacity: 0, y: 22, duration: 0.65 }, '<0.04')
         .from('.board-actions', { opacity: 0, y: 10, duration: 0.4 }, '<0.12')
-        .from('.sticker-shelf', { opacity: 0, y: 18, duration: 0.55 }, '<0.08')
+        .from('.sticker-book', { opacity: 0, y: 18, duration: 0.55 }, '<0.08')
         .from('.studio-status', { opacity: 0, duration: 0.4 }, '<0.1');
+      if (enter) timeline.play(0);
+      else timeline.pause(0);
     });
     return () => media.revert();
-  }, { dependencies: [active], scope: rootRef, revertOnUpdate: true });
+  }, { dependencies: [enter], scope: rootRef, revertOnUpdate: true });
 
   useGSAP(() => {
     const board = boardRef.current;
@@ -340,6 +358,7 @@ const Studio = forwardRef(function Studio({ active }, ref) {
   const finishGeneration = (nextCopy, nextVariation) => {
     setCopy(nextCopy);
     setVariation(nextVariation);
+    setPane('read');
   };
 
   const completeGeneration = () => {
@@ -414,6 +433,26 @@ const Studio = forwardRef(function Studio({ active }, ref) {
     animatePaper(nextCopy, nextVariation);
   });
 
+  const dragNote = (event) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    if (event.target.closest('button')) return;
+    event.preventDefault();
+    const startX = event.clientX;
+    const startY = event.clientY;
+    const origin = { ...noteOffset };
+    const move = (moveEvent) => {
+      setNoteOffset({ x: origin.x + moveEvent.clientX - startX, y: origin.y + moveEvent.clientY - startY });
+    };
+    const stop = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', stop);
+      window.removeEventListener('pointercancel', stop);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', stop);
+    window.addEventListener('pointercancel', stop);
+  };
+
   useImperativeHandle(ref, () => ({
     generateWith(example) {
       if (isGenerating) {
@@ -445,6 +484,7 @@ const Studio = forwardRef(function Studio({ active }, ref) {
       setStatus('这一页正在书写，写完后可以再改。');
       return;
     }
+    setPane('write');
     setMode('custom');
     setCustomTitle(copy.title);
     setCustomBody(copy.body);
@@ -453,29 +493,69 @@ const Studio = forwardRef(function Studio({ active }, ref) {
     requestAnimationFrame(() => customBodyRef.current?.focus({ preventScroll: true }));
   };
 
-  const addSticker = contextSafe((type) => {
+  const addSticker = contextSafe((type, point) => {
     if (stickers.length >= 8) {
       setStatus('一页最多放 8 枚贴纸，先移除一枚再试试。');
       return;
     }
-    const id = `${type}-${Date.now()}`;
     const boardStyles = getComputedStyle(boardRef.current);
     const stickerWidth = parseFloat(boardStyles.getPropertyValue('--sticker-w')) || 92;
     const stickerHeight = parseFloat(boardStyles.getPropertyValue('--sticker-h')) || 110;
-    const width = Math.max(1, boardRef.current.clientWidth - stickerWidth - 48);
-    const height = Math.max(1, boardRef.current.clientHeight - stickerHeight - 48);
+    const maxX = Math.max(1, boardRef.current.clientWidth - stickerWidth);
+    const maxY = Math.max(1, boardRef.current.clientHeight - stickerHeight);
     const count = stickers.length;
-    const sticker = {
-      id,
-      type,
-      x: 24 + (count * 67) % width,
-      y: 24 + (count * 83) % height,
-      rotation: -12 + (count * 9) % 25,
-    };
+    const id = `${type}-${Date.now()}`;
+    const x = point ? Math.min(maxX, Math.max(0, point.x - stickerWidth / 2)) : Math.min(maxX - 20, 24 + (count * 67) % maxX);
+    const y = point ? Math.min(maxY, Math.max(0, point.y - stickerHeight / 2)) : Math.min(maxY - 20, 24 + (count * 83) % maxY);
+    const sticker = { id, type, x, y, rotation: -12 + (count * 9) % 25 };
     newStickerRef.current = id;
     setSelectedSticker(id);
     setStickers((current) => [...current, sticker]);
     setStatus(`已添加${stickerCatalog.find((item) => item.id === type)?.label}，拖动它完成拼贴。`);
+  });
+
+  const pullSticker = contextSafe((event, type) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    const art = event.currentTarget.querySelector('.sticker-chip__art');
+    if (!art) return;
+    const startX = event.clientX;
+    const startY = event.clientY;
+    let ghost = null;
+    let moved = false;
+    const onMove = (moveEvent) => {
+      if (!moved && Math.hypot(moveEvent.clientX - startX, moveEvent.clientY - startY) < 7) return;
+      moved = true;
+      if (!ghost) {
+        ghost = document.createElement('span');
+        ghost.className = 'sticker-drag-ghost';
+        ghost.appendChild(art.querySelector('svg')?.cloneNode(true) || art.cloneNode(true));
+        document.body.appendChild(ghost);
+      }
+      ghost.style.transform = `translate3d(${moveEvent.clientX - 30}px, ${moveEvent.clientY - 36}px, 0) rotate(-7deg)`;
+    };
+    const clean = () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', finish);
+      window.removeEventListener('pointercancel', clean);
+      if (ghost) ghost.remove();
+    };
+    const finish = (upEvent) => {
+      clean();
+      if (!moved) {
+        addSticker(type);
+        return;
+      }
+      const board = boardRef.current?.getBoundingClientRect();
+      if (!board) return;
+      const inside = upEvent.clientX >= board.left - 8 && upEvent.clientX <= board.right + 8
+        && upEvent.clientY >= board.top - 8 && upEvent.clientY <= board.bottom + 8;
+      if (!inside) return;
+      addSticker(type, { x: upEvent.clientX - board.left, y: upEvent.clientY - board.top });
+      setBookOpen(false);
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', finish);
+    window.addEventListener('pointercancel', clean);
   });
 
   const removeSelected = contextSafe(() => {
@@ -539,6 +619,31 @@ const Studio = forwardRef(function Studio({ active }, ref) {
     }
   };
 
+  const exportImage = async () => {
+    if (exporting) return;
+    setExporting(true);
+    setStatus('正在把这一页装进相框里…');
+    try {
+      const blob = await exportPaperPng({
+        paper: paperRef.current,
+        board: boardRef.current,
+        copy,
+        paperFont,
+        edition: variation + 1,
+        theme: paperTheme,
+      });
+      if (!blob) throw new Error('empty');
+      const now = new Date();
+      const stamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}-${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
+      downloadBlob(blob, `maison-des-mots-${stamp}.png`);
+      setStatus('图片已存到下载文件夹：3× 高清，带一处浅色桌面底。');
+    } catch {
+      setStatus('这张纸暂时没能导出，可以再试一次。');
+    } finally {
+      setExporting(false);
+    }
+  };
+
   const selectedLabel = stickerCatalog.find((item) => item.id === stickers.find((sticker) => sticker.id === selectedSticker)?.type)?.label;
 
   const currentFont = paperFonts.find((item) => item.id === paperFont) || paperFonts[0];
@@ -558,10 +663,15 @@ const Studio = forwardRef(function Studio({ active }, ref) {
   };
 
   return (
-    <section ref={rootRef} className="studio" id="atelier" aria-labelledby="studio-title" tabIndex={-1}>
+    <section ref={rootRef} className={`studio pane-${pane}`} id="atelier" aria-labelledby="studio-title" tabIndex={-1}>
+      <svg className="desk-grain" aria-hidden="true" focusable="false"><filter id="desk-grain"><feTurbulence type="fractalNoise" baseFrequency=".012 .38" numOctaves="4" seed="11" stitchTiles="stitch" /><feColorMatrix type="saturate" values="0" /></filter><rect width="100%" height="100%" filter="url(#desk-grain)" /></svg>
       <div className="studio-heading"><div><p className="kicker">L’atelier · 创作台</p><h2 id="studio-title">先写一段，<br /><em>再贴成你的样子。</em></h2></div><p>可以用灵感起稿，也可以自己写。自己写的字会原样落在纸上，不追加句子。</p></div>
+      <div className="studio-tabs" role="tablist" aria-label="创作台两页">
+        <button type="button" role="tab" aria-selected={pane === 'write'} aria-controls="studio-form" onClick={() => setPane('write')}><span>01</span>写作</button>
+        <button type="button" role="tab" aria-selected={pane === 'read'} aria-controls="studio-paper" onClick={() => setPane('read')}><span>02</span>纸页</button>
+      </div>
       <div className="studio-workspace">
-        <form className="prompt-panel" onSubmit={(event) => { event.preventDefault(); if (mode === 'custom') startCustomWriting(); else startGeneration(); }} noValidate>
+        <form className="prompt-panel" id="studio-form" onSubmit={(event) => { event.preventDefault(); if (mode === 'custom') startCustomWriting(); else startGeneration(); }} noValidate>
           <div className="panel-caption"><span lang="fr">LA FORMULE</span><span>01 / 02</span></div>
 
           <div className="mode-switch" role="group" aria-label="写作方式">
@@ -616,7 +726,7 @@ const Studio = forwardRef(function Studio({ active }, ref) {
           <p className="local-note"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 9V6a5 5 0 0 1 10 0v3M4 9h12v9H4Z" stroke="currentColor" /></svg>{mode === 'custom' ? '自己写的内容只留在本地，不会上传' : '本地模板生成，内容不会上传'}</p>
         </form>
 
-        <div className="preview-panel">
+        <div className="preview-panel" id="studio-paper">
           <div className="preview-toolbar">
             <div className="panel-caption"><span lang="fr">LA PAGE</span><span>02 / 02</span></div>
             <div className="font-switch" role="group" aria-label="信纸正文字体">
@@ -630,22 +740,41 @@ const Studio = forwardRef(function Studio({ active }, ref) {
                 >{item.label}</button>
               ))}
             </div>
+            <div className="speed-switch" role="group" aria-label="书写速度">
+              <span>书写</span>
+              {[{ v: 0.7, l: '慢' }, { v: 1, l: '常' }, { v: 1.6, l: '快' }].map((option) => (
+                <button key={option.l} type="button" aria-pressed={speed === option.v} onClick={() => { setSpeed(option.v); setStatus(`书写速度：${option.l}。`); }}>{option.l}</button>
+              ))}
+            </div>
             <div className="paper-switch" role="group" aria-label="纸张颜色">
               <button type="button" aria-pressed={paperTheme === 'cream'} onClick={() => setPaperTheme('cream')}><i className="cream-dot" aria-hidden="true" />奶油纸</button>
               <button type="button" aria-pressed={paperTheme === 'blue'} onClick={() => setPaperTheme('blue')}><i className="blue-dot" aria-hidden="true" />雾蓝纸</button>
             </div>
           </div>
           <div ref={boardRef} className={`collage-board theme-${paperTheme} font-${paperFont}`}>
-            <svg className="board-envelope" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-              <path className="envelope-flap" d="M0 0 L50 30 L100 0" />
-              <path className="envelope-fold" d="M0 0 L19 100" />
-              <path className="envelope-fold" d="M100 0 L81 100" />
-              <path className="envelope-pocket-line" d="M0 79 L50 72 L100 79" />
+            <svg className="board-envelope" viewBox="0 0 320 240" aria-hidden="true">
+              <ellipse cx="160" cy="206" rx="138" ry="9" fill="#1e2748" opacity=".07" />
+              <rect x="17" y="40" width="286" height="167" rx="4" fill="#fffdf8" />
+              <rect x="21" y="44" width="278" height="159" rx="2" fill="#fbf9f4" stroke="#1e2748" strokeWidth="1" strokeOpacity=".55" />
+              <path d="M21 45 L166 140 L21 202 Z" fill="#dce2f1" fillOpacity=".5" stroke="#1e2748" strokeWidth="1" strokeOpacity=".3" />
+              <path d="M299 45 L154 140 L299 202 Z" fill="#bfc8e0" fillOpacity=".28" stroke="#1e2748" strokeWidth="1" strokeOpacity=".3" />
+              <path d="M22 202 L160 109 L298 202 Z" fill="#fbf9f4" stroke="#1e2748" strokeWidth="1" strokeOpacity=".4" />
+              <path d="M23 49 L160 149 L297 49 Z" fill="#1e2748" opacity=".08" />
+              <path d="M22 44 L160 140 L298 44 Z" fill="#fffdf8" stroke="#1e2748" strokeWidth="1" strokeOpacity=".5" />
+              <path d="M28 46 L160 137 L292 46" fill="none" stroke="#ffffff" strokeWidth="1" />
+              <rect x="253" y="54" width="31" height="35" fill="#fffdf8" />
+              <rect x="256" y="57" width="25" height="29" fill="#e8c9d0" fillOpacity=".45" stroke="#46536f" strokeWidth="1" strokeDasharray="1 2" />
+              <path d="M262 77 V65 L268 73 L275 65 V77" fill="none" stroke="#46536f" strokeWidth="1" />
+              <path d="M108 174 H212 M123 183 H197" fill="none" stroke="#46536f" strokeWidth="1" opacity=".55" />
+              <ellipse cx="161" cy="145" rx="20" ry="17" fill="#1e2748" opacity=".13" />
+              <path d="M159 121 C166 119 170 125 176 128 S178 139 180 144 172 156 165 157 154 155 148 155 140 148 141 140 139 132 146 128 152 121 159 121 Z" fill="#e8c9d0" stroke="#46536f" strokeWidth="1" strokeOpacity=".45" />
+              <path d="M160 146 Q151 141 151 135 Q158 135 160 141 Q162 135 169 135 Q169 141 160 146 Z" fill="none" stroke="#46536f" strokeWidth="1" opacity=".6" />
             </svg>
             <span className="board-corner board-corner-tl" aria-hidden="true" /><span className="board-corner board-corner-tr" aria-hidden="true" /><span className="board-corner board-corner-bl" aria-hidden="true" /><span className="board-corner board-corner-br" aria-hidden="true" />
-            <article ref={paperRef} className="copy-paper" aria-label="生成的文案" aria-busy={isGenerating}>
-              <span className="copy-tape" aria-hidden="true" />
-              <GeneratedCopy copy={copy} onTyped={completeGeneration} active={active} skipRef={skipWritingRef} onWriting={setWriting} />
+            <span className="paper-underlay paper-underlay--b" aria-hidden="true" />
+            <span className="paper-underlay paper-underlay--a" aria-hidden="true" />
+            <article ref={paperRef} className="copy-paper" aria-label="生成的文案" aria-busy={isGenerating}>              <span className="copy-tape" aria-hidden="true" />
+              <GeneratedCopy copy={copy} onTyped={completeGeneration} active={active} skipRef={skipWritingRef} onWriting={setWriting} speed={speed} />
               <div className="copy-paper-meta"><span>MAISON DES MOTS</span><span>N° {String(variation + 1).padStart(3, '0')}</span></div>
             </article>
             <span className="board-pocket" aria-hidden="true" />
@@ -671,6 +800,9 @@ const Studio = forwardRef(function Studio({ active }, ref) {
             <button className="copy-button" type="button" onClick={copyText}>
               <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="6" y="6" width="10" height="11" stroke="currentColor" /><path d="M13 6V3H3v11h3" stroke="currentColor" /></svg>复制文案
             </button>
+            <button className="export-button" type="button" onClick={exportImage} aria-busy={exporting} aria-disabled={exporting}>
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 3v9m0 0 3.5-3.5M10 12 6.5 8.5M3 13v3h14v-3" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" /></svg>导出图片
+            </button>
             <button type="button" className="quiet-button" aria-disabled={isGenerating} onClick={editCurrent}>编辑这段</button>
             {(isGenerating || writing) && <button type="button" className="quiet-button skip-button" onClick={skipWriting}>跳过书写</button>}
             <button type="button" className="quiet-button" aria-disabled={!selectedSticker} onClick={() => { if (!selectedSticker) return; removeSelected(); }}>取下{selectedLabel ? `「${selectedLabel}」` : '贴纸'}</button>
@@ -679,15 +811,45 @@ const Studio = forwardRef(function Studio({ active }, ref) {
         </div>
       </div>
 
-      <div className="sticker-shelf">
-        <div className="shelf-label"><span lang="fr">LA PETITE COLLECTION</span><strong>选一枚，贴上去</strong><small>拖动移位 · 方向键微调 · Delete 删除</small></div>
-        <div className="sticker-options">{stickerCatalog.map((sticker) => (
-          <button type="button" key={sticker.id} onClick={() => addSticker(sticker.id)} aria-label={`添加${sticker.label}贴纸`}>
-            <span className="sticker-option-art"><StickerArt type={sticker.id} /></span>
-            <span>{sticker.label}</span>
-          </button>
-        ))}</div>
-        <div className="sticker-count"><strong>{String(stickers.length).padStart(2, '0')}</strong><span>/ 08<br />枚贴纸</span></div>
+      <div className={`sticker-book${bookOpen ? ' is-open' : ''}`}>
+        <span className="sticker-book__leaf sticker-book__leaf--b" aria-hidden="true" />
+        <span className="sticker-book__leaf sticker-book__leaf--a" aria-hidden="true" />
+        <button type="button" className="sticker-book__tab" aria-expanded={bookOpen} aria-controls="sticker-note" onClick={() => setBookOpen((open) => !open)}>
+          <span className="sticker-book__clip" aria-hidden="true"><Paperclip /></span>
+          <span className="sticker-book__stack" aria-hidden="true"><i /><i /><i /></span>
+          <span className="sticker-book__label"><small lang="fr">LA PETITE COLLECTION</small><strong>贴纸簿</strong></span>
+          <span className="sticker-book__count"><b>{String(stickers.length).padStart(2, '0')}</b>/08</span>
+          <span className="sticker-book__mark" aria-hidden="true">{bookOpen ? '×' : '＋'}</span>
+        </button>
+        <div
+          className="sticker-book__note"
+          id="sticker-note"
+          hidden={!bookOpen}
+          style={{ transform: `translate(${noteOffset.x}px, ${noteOffset.y}px) rotate(-1.1deg)` }}
+        >
+          <span className="sticker-book__clip sticker-book__clip--note" aria-hidden="true"><Paperclip /></span>
+          <span className="sticker-book__tape" aria-hidden="true" />
+          <div className="sticker-book__head" onPointerDown={dragNote}>
+            <span lang="fr">PLANCHE N° 02 · 10 PIÈCES</span>
+            <p>点一枚贴到纸上，也可以直接拖过去。</p>
+            <button type="button" className="sticker-book__close" onClick={() => setBookOpen(false)} aria-label="收起贴纸簿">收好</button>
+          </div>
+          <div className="sticker-book__grid">
+            {stickerCatalog.map((sticker) => (
+              <button
+                type="button"
+                key={sticker.id}
+                className="sticker-chip"
+                aria-label={`添加${sticker.label}贴纸，或拖到纸上`}
+                onPointerDown={(event) => pullSticker(event, sticker.id)}
+                onClick={(event) => { if (event.detail === 0) addSticker(sticker.id); }}
+              >
+                <span className="sticker-chip__art"><StickerArt type={sticker.id} /></span>
+                <span className="sticker-chip__label">{sticker.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
       <p className="studio-status" role="status" aria-live="polite"><span aria-hidden="true">✦</span>{status}</p>
     </section>

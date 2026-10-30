@@ -4,11 +4,10 @@ import { useGSAP } from '@gsap/react';
 import HeroCollage from '../components/HeroCollage';
 import TagRail from '../components/TagRail';
 
-export default function Cover({ active, onNavigate }) {
+export default function Cover({ active, enter, onNavigate }) {
   const rootRef = useRef(null);
 
   useGSAP(() => {
-    if (!active) return undefined;
     const media = gsap.matchMedia();
     media.add('(prefers-reduced-motion: no-preference)', () => {
       const timeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
@@ -22,9 +21,9 @@ export default function Cover({ active, onNavigate }) {
         .from('.hero-dial', { opacity: 0, scale: 0.78, rotation: -16, duration: 1 }, 0.2)
         .from('.hero-blue-paper', { opacity: 0, scale: 0.86, rotation: 12, duration: 0.8 }, '<0.05')
         .from('.hero-paper', { opacity: 0, y: 64, rotation: -6, duration: 0.95 }, '<0.08')
-        .from('.hero-sticker, .hero-hanging, .hero-postmark, .hero-star', { opacity: 0, scale: 0.62, rotation: -10, duration: 0.55, stagger: 0.07 }, '<0.35')
+        .from('.hero-sticker, .hero-hanging, .hero-postmark, .hero-star', { opacity: 0, scale: 0.62, rotation: -10, duration: 0.55, stagger: 0.07, ease: 'back.out(1.5)' }, '<0.35')
         .from('.hero-camellia', { opacity: 0, scale: 0.7, rotation: 8, duration: 0.75 }, '<0.1')
-        .from('.hero-souvenir', { opacity: 0, scale: 0.55, rotation: 20, duration: 0.8 }, '<0.08')
+        .from('.hero-souvenir', { opacity: 0, scale: 0.55, rotation: 20, duration: 0.8, ease: 'back.out(1.4)' }, '<0.08')
         .from('.hero-ledger > *', { opacity: 0, y: 10, duration: 0.5, stagger: 0.08 }, '<0.2');
 
       const visual = rootRef.current?.querySelector('.hero-visual');
@@ -55,6 +54,8 @@ export default function Cover({ active, onNavigate }) {
       visual.addEventListener('pointercancel', onLeave);
       window.addEventListener('blur', onLeave);
       timeline.eventCallback('onComplete', () => { ready = true; });
+      if (enter) timeline.play(0);
+      else timeline.pause(0);
       return () => {
         visual.removeEventListener('pointermove', onMove);
         visual.removeEventListener('pointerleave', onLeave);
@@ -63,7 +64,7 @@ export default function Cover({ active, onNavigate }) {
       };
     });
     return () => media.revert();
-  }, { dependencies: [active], scope: rootRef, revertOnUpdate: true });
+  }, { dependencies: [enter], scope: rootRef, revertOnUpdate: true });
 
   return (
     <section ref={rootRef} className="page-cover" aria-labelledby="hero-title">
