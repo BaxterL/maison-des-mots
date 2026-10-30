@@ -6,8 +6,95 @@ export const stickerCatalog = [
   { id: 'stamp', label: '邮票' },
   { id: 'key', label: '旧钥匙' },
   { id: 'bow', label: '缎带蝴蝶结' },
-  { id: 'moon', label: '月亮挂坠' }
+  { id: 'moon', label: '月亮挂坠' },
+  { id: 'letter', label: '折叠书信' },
+  { id: 'frame', label: '浮雕相框' },
+  { id: 'window', label: '法式窗扇' },
+  { id: 'herbier', label: '植物标本夹' },
 ];
+
+function FoldedLetterSticker() {
+  return (
+    <svg viewBox="0 0 120 140" className="sticker-svg" aria-hidden="true" focusable="false">
+      <path className="stk-edge" d="M12 49 95 31 108 91 25 109Z" />
+      <g className="stk-line" transform="rotate(-3 60 70)">
+        <path d="M14 48 95 34 105 94 25 108Z" fill="#d8e1e5" />
+        <path d="M12 46 93 32 104 91 23 105Z" />
+        <path d="M13 47 60 72 93 33M24 104 60 72 103 90" fill="none" />
+        <path className="stk-detail" d="M17 49 59 76 89 39M27 102 101 89" />
+        <path d="M78 35 96 43 91 56Z" fill="#263b54" fillOpacity=".12" stroke="none" />
+        <path d="M78 35Q88 33 93 32L96 46Q84 43 78 35Z" fill="#d8e1e5" fillOpacity=".4" />
+        <path className="stk-hi" d="M80 35Q88 35 92 34" />
+      </g>
+    </svg>
+  );
+}
+
+function OvalFrameSticker() {
+  return (
+    <svg viewBox="0 0 120 140" className="sticker-svg" aria-hidden="true" focusable="false">
+      <path className="stk-edge" d="M60 7Q72 15 69 24C90 32 96 52 94 77C92 110 78 131 60 131S28 110 26 77C24 52 30 32 51 24Q50 14 60 7Z" />
+      <g className="stk-line">
+        <ellipse cx="60" cy="76" rx="34" ry="54" fill="#d8e1e5" fillOpacity=".4" />
+        <ellipse cx="60" cy="76" rx="29" ry="49" />
+        <ellipse cx="60" cy="76" rx="24" ry="44" />
+        <path className="stk-detail" d="M60 25C42 25 29 47 29 76S42 127 60 127M62 29C78 32 86 52 86 76S77 119 62 123" />
+        <ellipse className="stk-hi" cx="60" cy="76" rx="32" ry="52" />
+        <ellipse className="stk-hi" cx="60" cy="76" rx="25.5" ry="45.5" />
+        <path d="M60 28C49 25 49 14 60 7C70 14 72 23 60 28Z" fill="#d8e1e5" fillOpacity=".4" />
+        <path className="stk-detail" d="M60 10V29M60 21 55 16M60 24 65 18" />
+        <path d="M29 69 32 76 29 83M91 69 88 76 91 83M54 127 60 123 66 127" fill="none" />
+        <path className="stk-detail" d="M38 43 41 46M33 54 36 56M35 98 38 96M43 115 45 112M82 43 79 46M87 54 84 56M85 98 82 96M77 115 75 112" />
+      </g>
+    </svg>
+  );
+}
+
+function FrenchWindowSticker() {
+  return (
+    <svg viewBox="0 0 120 140" className="sticker-svg" aria-hidden="true" focusable="false">
+      <path className="stk-edge" d="M14 17H106V117H14Z" />
+      <g className="stk-line">
+        <path d="M20 19H100V116H20Z" />
+        <path d="M24 23H96V112H24Z" fill="none" />
+        <path d="M51 25C56 46 46 63 56 87L80 111C68 81 82 49 78 25Z" fill="#d8e1e5" fillOpacity=".12" stroke="none" />
+        <path className="stk-detail" d="M67 26C73 48 61 66 74 96M77 26C82 48 73 74 83 102M62 26H90" />
+        <path d="M20 19 49 29V106L20 116ZM100 19 71 29V106L100 116Z" fill="#d8e1e5" fillOpacity=".1" />
+        <path d="M24 25 45 32V103L24 110ZM96 25 75 32V103L96 110Z" fill="none" />
+        <path d="M34.5 28.5V106.5M85.5 28.5V106.5M24 53.3 45 55.7M24 81.7 45 79.3M96 53.3 75 55.7M96 81.7 75 79.3" fill="none" />
+        <path d="M16 35H20V43H16ZM16 92H20V100H16ZM100 35H104V43H100ZM100 92H104V100H100Z" fill="#d8e1e5" />
+        <path d="M47 64V72M73 64V72" fill="none" />
+      </g>
+    </svg>
+  );
+}
+
+function HerbierSticker() {
+  return (
+    <svg viewBox="0 0 120 140" className="sticker-svg" aria-hidden="true" focusable="false">
+      <defs>
+        <g id="sticker-ginkgo-leaf">
+          <path className="stk-edge" d="M0 0Q-16 -5 -17 -20Q-13 -25 -9 -23Q-5 -28 0 -23Q5 -28 9 -23Q13 -25 17 -20Q16 -5 0 0Z" />
+          <path className="stk-line stk-leaf" d="M0 0Q-16 -5 -17 -20Q-13 -25 -9 -23Q-5 -28 0 -23Q5 -28 9 -23Q13 -25 17 -20Q16 -5 0 0Z" />
+          <path className="stk-detail" d="M0 -1 -13 -20M0 -1 -7 -22M0 -1V-21M0 -1 7 -22M0 -1 13 -20" />
+        </g>
+      </defs>
+      <path d="M54 127Q65 88 59 31M59 57 40 43M61 77 83 57M60 92 34 77M58 108 83 88" fill="none" stroke="#f7f2e8" strokeWidth="5.1" strokeLinecap="round" />
+      <path className="stk-line" d="M54 127Q65 88 59 31M59 57 40 43M61 77 83 57M60 92 34 77M58 108 83 88" fill="none" />
+      <use href="#sticker-ginkgo-leaf" transform="translate(59 33) scale(.72)" />
+      <use href="#sticker-ginkgo-leaf" transform="translate(41 44) rotate(-40) scale(.78)" />
+      <use href="#sticker-ginkgo-leaf" transform="translate(81 58) rotate(38) scale(.85)" />
+      <use href="#sticker-ginkgo-leaf" transform="translate(35 78) rotate(-55) scale(.86)" />
+      <use href="#sticker-ginkgo-leaf" transform="translate(81 89) rotate(48) scale(.8)" />
+      <g transform="rotate(-6 60 111)">
+        <path className="stk-edge" d="M37 105H85V117H37Z" />
+        <path className="stk-line" d="M37 105H85V117H37Z" />
+        <text className="stk-label" x="43" y="114">N° 03</text>
+      </g>
+    </svg>
+  );
+}
+
 
 function BottleSticker() {
   return (
@@ -251,6 +338,14 @@ export function StickerArt({ type }) {
       return <BowSticker />;
     case 'moon':
       return <MoonSticker />;
+    case 'letter':
+      return <FoldedLetterSticker />;
+    case 'frame':
+      return <OvalFrameSticker />;
+    case 'window':
+      return <FrenchWindowSticker />;
+    case 'herbier':
+      return <HerbierSticker />;
     default:
       return null;
   }

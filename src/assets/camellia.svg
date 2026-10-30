@@ -1,0 +1,92 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-labelledby="title">
+  <title>白山茶贴纸</title>
+  <defs>
+    <radialGradient id="outer" cx="44%" cy="35%" r="70%"><stop stop-color="#FDFCF8"/><stop offset=".62" stop-color="#C9D2E4"/><stop offset="1" stop-color="#C9D2E4"/></radialGradient>
+    <radialGradient id="inner" cx="45%" cy="28%" r="78%"><stop stop-color="#FDFCF8"/><stop offset=".73" stop-color="#FDFCF8"/><stop offset="1" stop-color="#E8C9D0" stop-opacity=".4"/></radialGradient>
+    <radialGradient id="leaf" cx="35%" cy="28%" r="85%"><stop stop-color="#FDFCF8"/><stop offset=".55" stop-color="#DDE3EC"/><stop offset="1" stop-color="#A7B3C4"/></radialGradient>
+  <style>
+    @layer die-cut {
+      #art path, #art circle { fill: var(--cut-fill, revert-layer); stroke: var(--cut-stroke, revert-layer); stroke-width: var(--cut-width, revert-layer); }
+      #art, #art * { fill-opacity: var(--cut-opacity, revert-layer); stroke-opacity: var(--cut-opacity, revert-layer); opacity: var(--cut-opacity, revert-layer); stroke-linejoin: round; }
+    }
+  </style>
+  <g id="art">
+  <g id="stems" fill="none" stroke="#1E2748" stroke-opacity=".7" stroke-linecap="round">
+    <path stroke-width="1.8" d="M212 292C190 267 176 239 164 207C155 181 150 153 151 136"/>
+    <path stroke-width="1.3" d="M196 274C168 257 139 242 120 217C103 190 95 151 86 119C79 99 69 86 56 76"/>
+    <path stroke-width=".8" d="M120 217L113 195M164 207L188 223M97 156L66 160M87 119L57 134M171 151L260 145M145 83L180 48M120 228L122 269M97 195L81 232"/>
+  </g>
+  <g id="leaves" fill="url(#leaf)" fill-opacity=".44" stroke="rgba(30,39,72,.78)" stroke-width=".9" stroke-linejoin="round">
+    <path d="M135 64C145 47 160 33 177 29L181 30L186 27L191 29L197 29L201 33L207 35L210 40L215 44C193 39 182 52 165 60L160 59L155 63L150 62L145 65Z"/>
+    <path d="M210 139C229 120 246 117 261 129L263 133L268 135L269 140L275 142L276 147L282 150L289 158L277 157L272 160L266 158L261 161L255 159L249 161C231 160 219 151 210 139Z"/>
+    <path d="M173 177C190 182 203 201 202 220L200 223L201 228L198 231L198 237L194 243L188 236L184 234L183 229L179 226L179 221L175 217C169 202 171 188 173 177Z"/>
+    <path d="M117 227C130 232 134 248 132 265L130 269L131 274L129 279L131 285L135 293L126 288L123 288L119 283L115 281L114 276L110 273L111 268L107 264C103 248 108 237 117 227Z"/>
+    <path d="M103 193C87 197 76 213 76 230L78 234L77 240L80 244L80 250L83 258C80 240 91 230 94 217L93 214L97 210L96 207L100 203Z"/>
+    <path d="M103 143C82 139 65 150 56 168L62 167L65 169L70 166L75 167L79 164L84 164L87 160L92 159C97 155 100 149 103 143Z"/>
+  </g>
+  <g id="leaf-veins" fill="none" stroke="rgba(30,39,72,.78)" stroke-width=".9" stroke-linecap="round">
+    <path d="M137 63Q171 38 210 42M151 53L154 43M168 45L178 53M184 41L193 33"/>
+    <path d="M213 139Q249 139 284 155M232 141L240 128M249 145L259 155M264 149L267 139"/>
+    <path d="M174 181Q186 208 194 237M181 197L192 200M186 211L177 207M191 225L198 217"/>
+    <path d="M118 230Q115 261 132 288M117 242L126 248M118 257L109 252M123 272L130 265"/>
+    <path d="M100 197Q79 223 82 249M90 211L82 214M84 226L90 222M81 237L78 232"/>
+    <path d="M100 145Q78 153 59 166M89 149L79 147M79 156L83 160M69 161L68 155"/>
+  </g>
+  <g id="upper-bud" stroke="rgba(30,39,72,.26)" stroke-width=".8" stroke-linejoin="round">
+    <path fill="url(#outer)" d="M59 90C42 94 30 82 35 70C30 59 41 51 50 55C60 49 71 59 70 70C78 79 69 89 59 90Z"/>
+    <path fill="url(#inner)" d="M53 86C39 80 40 68 44 61C50 55 57 62 55 69C63 71 65 83 53 86Z"/>
+    <path fill="url(#inner)" d="M58 85C64 76 54 65 58 59C69 61 71 75 66 82L58 85Z"/>
+    <path fill="#DDE3EC" fill-opacity=".4" d="M44 87L57 88L72 77L66 91L58 94Z"/>
+    <path fill="none" stroke-width=".6" d="M47 64Q43 72 49 78M62 64Q67 70 64 75"/>
+  </g>
+  <g id="lower-bud" stroke="rgba(30,39,72,.28)" stroke-width=".8" stroke-linejoin="round">
+    <path fill="url(#outer)" d="M113 199C100 197 99 185 104 179C105 170 116 167 121 175C130 180 125 194 113 199Z"/>
+    <path fill="url(#inner)" d="M112 194C103 189 107 178 112 175C119 177 114 183 117 187C120 191 115 194 112 194Z"/>
+    <path fill="url(#inner)" d="M116 194C123 186 116 180 120 177C128 185 121 195 116 194Z"/>
+    <path fill="#DDE3EC" fill-opacity=".45" d="M103 190L113 196L123 189L118 200L111 202Z"/>
+    <path fill="none" stroke-width=".6" d="M111 179Q107 185 112 189"/>
+  </g>
+  <g id="flower-head" transform="translate(168 150) scale(1.15) translate(-168 -150)">
+  <g id="outer-petals" fill="url(#outer)" fill-opacity=".4" stroke="rgba(30,39,72,.78)" stroke-width=".9" stroke-linejoin="round">
+    <path d="M151 130C134 117 118 106 119 88C113 75 122 66 135 69C145 57 161 65 169 73C179 88 169 111 151 130Z"/>
+    <path d="M153 126C155 107 157 84 174 73C186 64 198 74 199 83C217 80 227 94 221 107C217 124 182 133 153 126Z"/>
+    <path d="M157 128C176 115 199 109 217 117C233 124 231 139 222 145C227 162 216 174 201 173C181 174 166 149 157 128Z"/>
+    <path d="M153 135C173 139 193 151 199 166C205 179 193 190 180 186C169 199 150 195 146 184C135 170 144 146 153 135Z"/>
+    <path d="M147 133C153 153 149 177 134 184C122 190 110 181 110 170C94 168 88 152 98 141C109 127 130 125 147 133Z"/>
+    <path d="M145 127C128 140 108 143 97 130C83 127 83 109 92 101C88 86 104 75 117 82C134 85 141 108 145 127Z"/>
+  </g>
+  <g id="inner-petals" fill="url(#inner)" stroke="rgba(30,39,72,.78)" stroke-width=".9">
+    <path d="M147 137C129 131 111 119 109 105C106 95 115 88 124 95C125 109 140 112 151 118C158 124 155 133 147 137Z"/>
+    <path d="M145 122C129 110 128 91 138 82C146 75 155 82 155 91C150 100 154 107 161 114C165 125 154 129 145 122Z"/>
+    <path d="M157 119C151 103 162 86 174 86C187 83 196 96 188 107C175 106 175 121 166 128C160 132 155 125 157 119Z"/>
+    <path d="M163 126C175 114 191 111 200 121C208 132 198 147 186 150C175 157 166 149 158 140C168 139 178 135 179 127C174 123 169 126 163 126Z"/>
+    <path d="M151 138C164 134 178 145 175 158C174 173 156 181 145 172C133 176 121 163 124 151C127 144 134 141 137 134C140 143 144 148 151 148C159 148 157 141 151 138Z"/>
+  </g>
+  <g fill="#E8C9D0" opacity=".08">
+    <path d="M120 113Q135 129 150 126L146 137Q129 131 120 113Z"/>
+    <path d="M138 101Q144 116 158 118L151 128Q137 118 138 101Z"/>
+    <path d="M181 104Q168 114 165 130L156 122Q165 108 181 104Z"/>
+    <path d="M189 138Q175 145 161 136L158 141Q178 159 189 138Z"/>
+    <path d="M133 149Q148 162 167 148Q159 171 143 162Z"/>
+  </g>
+  <g fill="none" stroke="rgba(30,39,72,.78)" stroke-width=".9" stroke-linecap="round">
+    <path d="M122 78Q118 87 125 96M130 103L134 107M207 91Q215 97 211 106M204 112L200 114M215 150Q211 162 202 164M182 179Q171 186 163 182M118 163Q108 159 109 153M100 112Q98 122 108 127"/>
+    <path d="M137 88Q134 99 142 107M171 94Q181 90 183 98M131 154Q136 166 145 166"/>
+  </g>
+  <g id="flower-center" fill="#1E2748" fill-opacity=".6" stroke="none">
+    <circle cx="147" cy="116" r="1.2"/><circle cx="152" cy="114" r="1.2"/><circle cx="158" cy="115" r="1.2"/>
+    <circle cx="163" cy="118" r="1.2"/><circle cx="143" cy="120" r="1.2"/><circle cx="149" cy="120" r="1.2"/>
+    <circle cx="155" cy="120" r="1.2"/><circle cx="160" cy="123" r="1.2"/><circle cx="166" cy="123" r="1.2"/>
+    <circle cx="142" cy="125" r="1.2"/><circle cx="147" cy="126" r="1.2"/><circle cx="153" cy="125" r="1.2"/>
+    <circle cx="164" cy="129" r="1.2"/><circle cx="145" cy="132" r="1.2"/><circle cx="151" cy="131" r="1.2"/>
+    <circle cx="158" cy="130" r="1.2"/><circle cx="150" cy="136" r="1.2"/><circle cx="157" cy="135" r="1.2"/>
+    <path fill="none" stroke="#1E2748" stroke-opacity=".45" stroke-width=".7" stroke-linecap="round" d="M148 140L144 130M151 140L150 124M154 140L155 128M157 139L161 126M160 137L165 132"/>
+  </g>
+  </g>
+  </g>
+  </defs>
+  <!-- 整体剪影复用：细外缘、白色模切边、彩色原图。 -->
+  <use href="#art" style="--cut-fill:#fff;--cut-stroke:rgba(30,39,72,.12);--cut-width:9px;--cut-opacity:1"/>
+  <use href="#art" style="--cut-fill:#fff;--cut-stroke:#fff;--cut-width:12px;--cut-opacity:1"/>
+  <use href="#art"/>
+</svg>

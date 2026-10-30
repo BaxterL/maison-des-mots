@@ -5,3 +5,6 @@ command-code-session-*.html
 .DS_Store
 Thumbs.db
 *.local
+
+design-lab/
+.work/

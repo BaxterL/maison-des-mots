@@ -1,6 +1,6 @@
 import { StickerArt } from './StickerArt';
 import colonnade from '../assets/colonnade.webp';
-import camellia from '../assets/camellia.webp';
+import camellia from '../assets/camellia.svg';
 
 function ArchiveDial() {
   return (
@@ -30,7 +30,7 @@ export default function HeroCollage() {
         <div className="hero-paper-footer"><span>MAISON DES MOTS</span><span>PAGE 01</span></div>
       </div>
       <div className="hero-sticker hero-stamp parallax-layer"><StickerArt type="stamp" /></div>
-      <div className="hero-camellia parallax-layer"><span className="camellia-thread" /><span className="camellia-ring" /><img src={camellia} width="274" height="273" alt="" /></div>
+      <div className="hero-camellia parallax-layer"><span className="camellia-thread" /><span className="camellia-ring" /><img src={camellia} width="320" height="320" alt="" /></div>
       <div className="hero-hanging parallax-layer" aria-hidden="true"><span className="hanging-thread" /><span className="hanging-ring" /><StickerArt type="bottle" /></div>
       <div className="hero-souvenir parallax-layer"><div className="souvenir-content"><span lang="fr">Souvenir</span><small>PAGE · 01</small></div></div>
     </div>

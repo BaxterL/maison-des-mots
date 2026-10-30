@@ -10,6 +10,12 @@ const firstStickers = [
   { id: 'bottle-first', type: 'bottle', x: 2000, y: 360, rotation: 9 },
 ];
 
+const paperFonts = [
+  { id: 'kai', label: '文楷', name: 'LXGW WenKai' },
+  { id: 'song', label: '宋体', name: 'Noto Serif SC' },
+  { id: 'latin', label: '拉丁', name: 'Cormorant' },
+];
+
 const TOKEN_RE = /([A-Za-zÀ-ÖØ-öø-ÿ0-9]+(?:[’'\-][A-Za-zÀ-ÖØ-öø-ÿ0-9]+)*)|(\n)|(\s+)|([\s\S])/g;
 
 function tokenize(text) {
@@ -23,17 +29,69 @@ function tokenize(text) {
   return tokens;
 }
 
-function Quill() {
+function Brush() {
   return (
     <svg viewBox="0 0 64 64" aria-hidden="true">
-      <path className="quill-feather" d="M60 4C41 9 27 20 19 34 13 44 9 53 7 60c9-2 18-6 26-13C45 37 55 22 60 4Z" />
-      <path className="quill-rib" d="M60 4C47 13 35 26 26 39" />
-      <path className="quill-barb" d="M50 13c-3 3-5 6-6 10M43 22c-3 2-5 4-8 5M35 31c-3 2-5 3-8 4M28 41c-2 1-4 1-6 2" />
-      <path className="quill-nib" d="M7 58l-4 6 6-2 2-4" />
-      <circle className="quill-ink" cx="6" cy="59" r="2" />
+      <defs>
+        <linearGradient id="brush-handle" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#F4EFE3" />
+          <stop offset="1" stopColor="#DDD4C3" />
+        </linearGradient>
+        <linearGradient id="brush-tip" x1="0.2" y1="0" x2="0.9" y2="1">
+          <stop offset="0" stopColor="#28325A" />
+          <stop offset="1" stopColor="#0E1426" />
+        </linearGradient>
+      </defs>
+      <path d="M61 3 L37 27" stroke="url(#brush-handle)" strokeWidth="6.4" strokeLinecap="round" />
+      <path d="M61 3 L37 27" stroke="rgba(30,39,72,.32)" strokeWidth=".9" strokeLinecap="round" fill="none" />
+      <path d="M37 27 L31 33" stroke="#BFC8E0" strokeWidth="6.8" strokeLinecap="round" />
+      <path d="M31 33 C27 38 23 44 19 50 C16 55 12 59 8 62 C13 59 18 55 23 51 C28 47 32 41 35 36 Z" fill="url(#brush-tip)" />
+      <path d="M30 35 C27 40 24 45 21 50" stroke="rgba(255,253,248,.34)" strokeWidth=".9" fill="none" />
+      <circle cx="8" cy="62" r="1.6" fill="#0E1426" opacity=".85" />
     </svg>
   );
 }
+
+function Inkwell({ label, dipping, onCycle }) {
+  return (
+    <button type="button" className={`inkwell${dipping ? ' is-dipping' : ''}`} onClick={onCycle} aria-label={`当前字迹：${label}。点毛笔或这里切换字体`}>
+      <svg viewBox="0 0 120 150" aria-hidden="true">
+        <defs>
+          <linearGradient id="ink-glass" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="rgba(220,226,241,.9)" />
+            <stop offset="1" stopColor="rgba(191,200,224,.55)" />
+          </linearGradient>
+          <linearGradient id="ink-liquid" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#2B365E" />
+            <stop offset="1" stopColor="#161E3C" />
+          </linearGradient>
+          <linearGradient id="ink-brush" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#F4EFE3" />
+            <stop offset="1" stopColor="#DAD1C0" />
+          </linearGradient>
+        </defs>
+        <g className="inkwell-brush">
+          <path d="M96 8 L74 40" stroke="url(#ink-brush)" strokeWidth="5.2" strokeLinecap="round" />
+          <path d="M96 8 L74 40" stroke="rgba(30,39,72,.3)" strokeWidth=".8" strokeLinecap="round" fill="none" />
+          <path d="M74 40 L69 47" stroke="#BFC8E0" strokeWidth="5.6" strokeLinecap="round" />
+          <path d="M69 47 C66 51 63 55 59 58 C56 60 53 62 50 63 C54 60 58 57 61 54 C64 51 67 49 69 47 Z" fill="#1E2748" />
+        </g>
+        <g className="inkwell-bottle">
+          <ellipse cx="60" cy="141" rx="30" ry="4" fill="rgba(30,39,72,.14)" />
+          <rect x="50" y="52" width="20" height="16" fill="url(#ink-glass)" stroke="rgba(30,39,72,.45)" strokeWidth="1" />
+          <rect x="46" y="66" width="28" height="72" rx="8" fill="url(#ink-glass)" stroke="rgba(30,39,72,.45)" strokeWidth="1" />
+          <path d="M47 96 h26 v33 a7 7 0 0 1 -7 7 h-12 a7 7 0 0 1 -7 -7 Z" fill="url(#ink-liquid)" opacity=".82" />
+          <path d="M47 96 h26" stroke="rgba(255,253,248,.5)" strokeWidth="1.2" />
+          <path d="M52 76 v40 M68 72 v44" stroke="rgba(255,253,248,.45)" strokeWidth="1.6" strokeLinecap="round" />
+          <ellipse cx="60" cy="52" rx="10" ry="3.4" fill="none" stroke="rgba(30,39,72,.5)" strokeWidth="1" />
+          <path d="M50 58 h20" stroke="rgba(30,39,72,.28)" strokeWidth="1" />
+        </g>
+      </svg>
+      <span className="inkwell-label">{label}</span>
+    </button>
+  );
+}
+
 
 function GeneratedCopy({ copy, onTyped, active, skipRef, onWriting }) {
   const copyRef = useRef(null);
@@ -72,8 +130,8 @@ function GeneratedCopy({ copy, onTyped, active, skipRef, onWriting }) {
       if (!quill || !element) return;
       const currentBase = root.getBoundingClientRect();
       const rect = element.getBoundingClientRect();
-      const x = rect.left - currentBase.left - 4;
-      const y = rect.top - currentBase.top + rect.height * 0.6 - 40;
+      const x = rect.left - currentBase.left + rect.width - 6;
+      const y = rect.top - currentBase.top + rect.height - 44;
       gsap.to(quill, { x, y, duration: 0.16, ease: 'power2.out', overwrite: 'auto' });
     };
 
@@ -135,8 +193,8 @@ function GeneratedCopy({ copy, onTyped, active, skipRef, onWriting }) {
 
   return (
     <div ref={copyRef} className="generated-copy">
-      <span className="generated-note" lang="fr">{copy.note}</span>
-      <h3 className="generated-title">{copy.title}</h3>
+      {copy.custom ? null : <span className="generated-note" lang="fr">{copy.note}</span>}
+      {copy.title ? <h3 className="generated-title">{copy.title}</h3> : null}
       <span className="generated-flourish" aria-hidden="true">✦</span>
       <p className="generated-body" aria-hidden="true">
         {tokens.map((token, index) => token.newline
@@ -144,8 +202,8 @@ function GeneratedCopy({ copy, onTyped, active, skipRef, onWriting }) {
           : <span key={index} className={`ink-token${token.space ? ' ink-space' : ''}${token.word ? ' ink-word' : ''}`}>{token.text}</span>)}
       </p>
       <span className="sr-only" aria-live="polite">{copy.body}</span>
-      <span className="quill" ref={quillRef} aria-hidden="true"><Quill /></span>
-      <span className="generated-signature" lang="fr">{copy.signature || 'avec tendresse,'}</span>
+      <span className="brush" ref={quillRef} aria-hidden="true"><Brush /></span>
+      {copy.custom ? null : <span className="generated-signature" lang="fr">{copy.signature || 'avec tendresse,'}</span>}
     </div>
   );
 }
@@ -159,8 +217,7 @@ const Studio = forwardRef(function Studio({ active }, ref) {
   const delayRef = useRef(null);
   const skipWritingRef = useRef(null);
   const stickersRef = useRef(firstStickers);
-  const newStickerRef = useRef(null);
-  const [mode, setMode] = useState('template');
+  const newStickerRef = useRef(null);  const [mode, setMode] = useState('template');
   const [topic, setTopic] = useState('街角花店的春日午后');
   const [tone, setTone] = useState('tender');
   const [customTitle, setCustomTitle] = useState('');
@@ -175,6 +232,8 @@ const Studio = forwardRef(function Studio({ active }, ref) {
   const [stickers, setStickers] = useState(firstStickers);
   const [selectedSticker, setSelectedSticker] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [paperFont, setPaperFont] = useState('kai');
+  const [dipping, setDipping] = useState(false);
 
   useEffect(() => {
     if (!copied) return undefined;
@@ -339,10 +398,10 @@ const Studio = forwardRef(function Studio({ active }, ref) {
     delayRef.current?.kill();
     const nextVariation = variation + 1;
     const nextCopy = {
-      title: customTitle.trim() || '无题',
+      title: customTitle.trim(),
       body,
-      note: `Votre texte · Édition ${String(nextVariation).padStart(2, '0')}`,
-      signature: 'vos mots,',
+      note: '',
+      signature: '',
       custom: true,
     };
     setError('');
@@ -374,11 +433,7 @@ const Studio = forwardRef(function Studio({ active }, ref) {
     setMode(nextMode);
     setError('');
     if (nextMode === 'custom') {
-      if (!customBody.trim()) {
-        setCustomTitle(copy.title);
-        setCustomBody(copy.body);
-      }
-      setStatus('把纸上的字带出来了：删改后点「放到纸上」。');
+      setStatus('把想写的话放进来，纸会原样接住；想接着改纸上的字，点「编辑这段」。');
       requestAnimationFrame(() => customBodyRef.current?.focus({ preventScroll: true }));
     } else {
       setStatus('起稿会补成一封信；写自己的则原样上纸。');
@@ -465,8 +520,7 @@ const Studio = forwardRef(function Studio({ active }, ref) {
     Draggable.get(event.currentTarget)?.update();
   });
 
-  const copyText = async () => {
-    const text = `${copy.title}\n\n${copy.body}`;
+  const copyText = async () => {    const text = `${copy.title}\n\n${copy.body}`;
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
@@ -486,6 +540,22 @@ const Studio = forwardRef(function Studio({ active }, ref) {
   };
 
   const selectedLabel = stickerCatalog.find((item) => item.id === stickers.find((sticker) => sticker.id === selectedSticker)?.type)?.label;
+
+  const currentFont = paperFonts.find((item) => item.id === paperFont) || paperFonts[0];
+
+  const applyFont = (id) => {
+    const font = paperFonts.find((item) => item.id === id);
+    if (!font || id === paperFont) return;
+    setPaperFont(id);
+    setDipping(true);
+    window.setTimeout(() => setDipping(false), 640);
+    setStatus(`字迹换成${font.label}（${font.name}），墨迹干得很快。`);
+  };
+
+  const cycleFont = () => {
+    const index = paperFonts.findIndex((item) => item.id === paperFont);
+    applyFont(paperFonts[(index + 1) % paperFonts.length].id);
+  };
 
   return (
     <section ref={rootRef} className="studio" id="atelier" aria-labelledby="studio-title" tabIndex={-1}>
@@ -549,18 +619,37 @@ const Studio = forwardRef(function Studio({ active }, ref) {
         <div className="preview-panel">
           <div className="preview-toolbar">
             <div className="panel-caption"><span lang="fr">LA PAGE</span><span>02 / 02</span></div>
+            <div className="font-switch" role="group" aria-label="信纸正文字体">
+              {paperFonts.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  aria-pressed={paperFont === item.id}
+                  onClick={() => applyFont(item.id)}
+                  title={item.name}
+                >{item.label}</button>
+              ))}
+            </div>
             <div className="paper-switch" role="group" aria-label="纸张颜色">
               <button type="button" aria-pressed={paperTheme === 'cream'} onClick={() => setPaperTheme('cream')}><i className="cream-dot" aria-hidden="true" />奶油纸</button>
               <button type="button" aria-pressed={paperTheme === 'blue'} onClick={() => setPaperTheme('blue')}><i className="blue-dot" aria-hidden="true" />雾蓝纸</button>
             </div>
           </div>
-          <div ref={boardRef} className={`collage-board theme-${paperTheme}`}>
+          <div ref={boardRef} className={`collage-board theme-${paperTheme} font-${paperFont}`}>
+            <svg className="board-envelope" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <path className="envelope-flap" d="M0 0 L50 30 L100 0" />
+              <path className="envelope-fold" d="M0 0 L19 100" />
+              <path className="envelope-fold" d="M100 0 L81 100" />
+              <path className="envelope-pocket-line" d="M0 79 L50 72 L100 79" />
+            </svg>
             <span className="board-corner board-corner-tl" aria-hidden="true" /><span className="board-corner board-corner-tr" aria-hidden="true" /><span className="board-corner board-corner-bl" aria-hidden="true" /><span className="board-corner board-corner-br" aria-hidden="true" />
             <article ref={paperRef} className="copy-paper" aria-label="生成的文案" aria-busy={isGenerating}>
               <span className="copy-tape" aria-hidden="true" />
               <GeneratedCopy copy={copy} onTyped={completeGeneration} active={active} skipRef={skipWritingRef} onWriting={setWriting} />
               <div className="copy-paper-meta"><span>MAISON DES MOTS</span><span>N° {String(variation + 1).padStart(3, '0')}</span></div>
             </article>
+            <span className="board-pocket" aria-hidden="true" />
+            <Inkwell label={currentFont.label} dipping={dipping} onCycle={cycleFont} />
             {stickers.map((sticker, index) => (
               <button
                 key={sticker.id}
